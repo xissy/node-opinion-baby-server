@@ -138,7 +138,7 @@ module.exports = (grunt) ->
 
     express:
       options:
-        port: 20000
+        port: 20020
         hostname: '*'
         cmd: 'coffee'
       dev:
