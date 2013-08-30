@@ -1,25 +1,28 @@
-express = require 'express'
-http = require 'http'
-path = require 'path'
-
-
+express = require("express")
+http = require("http")
+path = require("path")
 app = express()
 
-app.use(express.favicon());
-app.use(express.logger('dev'));
-
-# # marker for `grunt-express` to inject static folder/contents
-# staticsPlaceholder = (req, res, next) ->
-#   next()
-# app.use staticsPlaceholder
-
-app.use express.cookieParser()
-app.use express.session
-  secret: 'recomio sentiment baby'
+# all environments
+app.set "port", process.env.PORT or 3000
+app.use express.favicon()
+app.use express.logger("dev")
 app.use express.bodyParser()
+# app.use express.methodOverride()
+# app.use app.router
+
+if app.get('env') is 'dist'
+  app.use express.static path.join __dirname, '../dist'
+else
+  app.use express.static path.join __dirname, '../.tmp'
+  
+
+# development only
+app.use express.errorHandler()  if 'dev' is app.get('env')
 
 
-app.get '/4', (req, res) -> res.send '12345'
+app.get '/2', (req, res) -> res.send '12345'
 
 
-module.exports = app
+http.createServer(app).listen app.get("port"), ->
+  console.log "Express server listening on port " + app.get("port")

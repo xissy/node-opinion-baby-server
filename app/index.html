@@ -3,21 +3,25 @@
 <head>
   <title>SentmentBaby</title>
 
-  <!-- build:css styles/css/style.usemin.css -->
-  <link href="bower_components/bootstrap/dist/css//bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
-  <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  <!-- build:css styles/style.usemin.css -->
+  <link href="bower_components/bootstrap/dist/css//bootstrap.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="bower_components/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
   <link href="styles/style.css" rel="stylesheet" type="text/css" />
   <!-- endbuild -->
 </head>
 
-<body ng-controller="MainCtrl">
+<body ng-controller="MainController">
+  <div ng-include="'views/header.html'" onload="onHeaderLoaded()">
+  </div>
+
   <div ng-view>
   </div>
   
-  <!-- build:js scripts/js/script.usemin.js -->
-  <script src="bower_components/jquery/jquery.min.js"></script>
-  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="bower_components/angular/angular.min.js"></script>
+  <!-- build:js scripts/script.usemin.js -->
+  <script src="bower_components/jquery/jquery.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.js"></script>
   <script src="scripts/app.js"></script>
   <!-- endbuild -->
 </body>

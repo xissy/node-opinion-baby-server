@@ -54,7 +54,18 @@ module.exports = (grunt) ->
         ]
 
     copy:
-      dev:
+      dev_html:
+        files: [
+          expand: true
+          dot: true
+          cwd: 'app'
+          dest: '.tmp'
+          src: [
+            '*.html'
+            'views/*.html'
+          ]
+        ]
+      dev_resources:
         files: [
           expand: true
           dot: true
@@ -65,8 +76,6 @@ module.exports = (grunt) ->
             'bower_components/**/*'
             'images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
             'styles/fonts/*'
-            '*.html'
-            'views/*.html'
           ]
         ]
       dist:
@@ -131,51 +140,86 @@ module.exports = (grunt) ->
       options:
         port: 20000
         hostname: '*'
-        server: 'server'
+        cmd: 'coffee'
       dev:
         options:
-          bases: [ '.tmp' ]
-          livereload: true
-          serverreload: true
+          script: 'server/index.coffee'
+          node_env: 'dev'
       dist:
         options:
-          bases: [ 'dist' ]
+          script: 'server/index.coffee'
+          node_env: 'dist'
+          background: false
 
     open:
       server:
         url: 'http://localhost:<%= express.options.port %>'
 
+    watch:
+      dev_app_scripts:
+        files: [ 'app/scripts/*' ]
+        tasks: [ 'coffee:dev' ]
+      dev_app_styles:
+        files: [ 'app/styles/*' ]
+        tasks: [ 'less:dev' ]
+      dev_app_html:
+        files: [ 'app/*.html', 'app/views/*.html' ]
+        tasks: [ 'copy:dev_html' ]
+      dev_server:
+        files: [ 'server/**/*' ]
+        tasks: [ 'express:dev:stop', 'express:dev' ]
+        options:
+          spawn: false
+
     clean: 
-      server: [ 'server/js/' ]
       dev: [ '.tmp/' ]
       dist: [ 'dist/' ]
 
 
   grunt.registerTask 'default', [
-    'coffee'
+    'build'
   ]
 
-  grunt.registerTask 'server', [
+  grunt.registerTask 'build', [
+    'build:dev'
+    'build:dist'
+  ]
+
+  grunt.registerTask 'build:dev', [
     'clean:dev'
     'coffee:dev'
     'less:dev'
-    'copy:dev'
-    'express:dev'
+    'copy:dev_html'
+    'copy:dev_resources'
   ]
-  
-  grunt.registerTask 'server:dist', [
+
+  grunt.registerTask 'build:dist', [
     'clean:dist'
     'coffee:dist'
     'less:dist'
     'copy:dist'
-    # 'cdnify'
     'useminPrepare'
     'concat'
     'uglify'
     'cssmin'
     'usemin'
     'htmlmin:dist'
+    'cdnify'
     'imagemin:dist'
+  ]
+
+  grunt.registerTask 'server', [
+    'server:dev'
+  ]
+
+  grunt.registerTask 'server:dev', [
+    'build:dev'
+    'express:dev'
+    'open'
+    'watch'
+  ]
+  
+  grunt.registerTask 'server:dist', [
+    'build:dist'
     'express:dist'
-    'express-keepalive'
   ]
