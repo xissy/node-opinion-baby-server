@@ -1,24 +1,25 @@
 {
-  "name": "sentiment-baby-server",
+  "name": "opinion-baby-server",
   "version": "0.0.1",
   "private": true,
-  "description": "An node.js express server for sentiment-baby.",
+  "description": "An node.js express server for opinion-baby.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xissy/node-sentiment-baby-server.git"
+    "url": "https://github.com/xissy/node-opinion-baby-server.git"
   },
   "keywords": [
     "NLP",
+    "opinion",
     "sentiment",
     "analysis",
     "review",
     "baby"
   ],
-  "author": "Taeho Kim",
+  "author": "Taeho Kim <xissysnd@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "express": "3.3.7",
-    "jade": "*"
+    "opinion-baby": "git+https://bitbucket.org/xissy/node-opinion-baby"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
