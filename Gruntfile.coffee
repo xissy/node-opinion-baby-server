@@ -10,6 +10,8 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON 'package.json'
 
     coffee:
+      options:
+        bare: true
       dev:
         options:
           sourceMap: true

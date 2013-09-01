@@ -1,15 +1,16 @@
 # Services
-sentimentServices = angular.module 'sentimentServices', [ 'ng', 'ngResource' ]
+opinionBabyServices = angular.module 'opinionBabyServices', [ 'ng', 'ngResource' ]
 
 
 # App
-sentimentApp = angular.module 'sentimentApp', [ 'sentimentServices' ]
+opinionBabyApp = angular.module 'opinionBabyApp', [ 'opinionBabyServices' ]
 
 # Controllers
-sentimentApp.controller 'MainController', [
+opinionBabyApp.controller 'MainController', [
   '$scope'
   '$route'
-  ($scope, $route) ->
+  '$http'
+  ($scope, $route, $http) ->
     $scope.onHeaderLoaded = ->
       whatIsThisElement = $('#whatIsThis')
 
@@ -17,19 +18,46 @@ sentimentApp.controller 'MainController', [
         trigger: 'hover'
         placement: 'auto'
         html: true
-        title: '<label>SentimentBaby</label>'
-        content: '<strong>SentimentBaby</strong> provides <strong>an awesome sentiment analysis</strong> from review text data.'
+        title: '<label>OpinionBaby</label>'
+        content: '<strong>OpinionBaby</strong> provides <strong>an awesome opinion analysis</strong> from review text data.'
         
       whatIsThisElement.popover 'show'
 
       setTimeout ->
         whatIsThisElement.popover 'hide'
       , 
-        3000
+        1000
+
+
+    $scope.sourceText = """A very light and comfortable stroller. I like that the tray comes off to help infant-size riders see ahead well. Nice big undercarriage storage. Had some difficulty getting used to folding/unfolding but it stores nice and compactly. A great value!"""
+    $scope.sourceTextLength = $scope.sourceText.length
+    $scope.maxSourceTextLength = 300
+    $scope.sourceTextLengthClass = ''
+    $scope.parsedHtml = ''
+    
+    $scope.sourceTextChange = ->
+      $scope.sourceTextLength = $scope.sourceText.length
+      if $scope.sourceTextLength > $scope.maxSourceTextLength
+        $scope.sourceTextLengthClass = 'red'
+      else
+        $scope.sourceTextLengthClass = ''
+
+    $scope.parse = ->
+      $http
+        url: '/opinions/parse'
+        method: 'POST'
+        data: $.param
+          sourceText: $scope.sourceText
+        headers:
+          'Content-Type': 'application/x-www-form-urlencoded'
+      .success (data, status, headers, config) ->
+        $scope.parsedHtml = OpinionBabyHelper.parsedToHtml data
+      .error (data, status, headers, config) ->
+        alert JSON.stringify data
 ]
 
-
-sentimentApp.config [
+# app configiguration
+opinionBabyApp.config [
   '$routeProvider'
   '$locationProvider'
   ($routeProvider, $locationProvider) ->
@@ -40,4 +68,5 @@ sentimentApp.config [
     $locationProvider.html5Mode true
 ]
 
-angular.bootstrap document, [ 'sentimentApp' ]
+# bootstraping
+angular.bootstrap document, [ 'opinionBabyApp' ]
